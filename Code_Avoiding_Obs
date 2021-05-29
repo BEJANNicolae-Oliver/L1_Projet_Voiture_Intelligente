@@ -1,0 +1,133 @@
+#include <Servo.h>  //Bibliothèque qui rend plus intuitive l’utilisation d’un servo moteur
+#include <Metro.h>  //Bibliothèque qui rend plus intuitive la programmation d’événements  périodiques
+
+Metro measureDistance = Metro(50);  //On fixe 
+Metro sweepServo = Metro(20);       //On fixe 
+
+int speedPin_M1 = 5;         //Le pin n°5 contrôle la vitesse de M1 – M3
+int speedPin_M2 = 6;         //Le pin n°6 contrôle la vitesse de M2 – M4
+int directionPin_M1 = 4;     //Le pin n°4 contrôle la direction de M1 – M3
+int directionPin_M2 = 7;     //Le pin n°7 contrôle la direction de M2 – M4
+unsigned long actualDistance = 0;
+
+Servo myservo;  
+int pos = 60;
+int sweepFlag = 1;     
+
+int URPWM = 3; 
+int URTRIG = 10;
+uint8_t EnPwmCmd[4] = {0x44, 0x02, 0xbb, 0x01}; 
+
+void setup(){                                 
+  myservo.attach(9);
+  Serial.begin(9600);                        
+  SensorSetup();
+  delay(1000);
+}
+
+void loop() {
+  if (measureDistance.check() == 1) {
+    actualDistance = MeasureDistance();
+Serial.println(actualDistance); //Envoye la valeur de la distance sur le moniteur de série
+delay(100);
+  }
+
+  if (sweepServo.check() == 1) {
+    servoSweep();
+  }
+
+  if (actualDistance <= 30) {         //Valeur qui détermine à quelle distance d’un obstacle la voiture va réagir         
+    myservo.write(90);
+    if (pos >= 90) {                  //La direction vers laquelle la voiture va tourner dépend de la position du capteur donc de l’obstacle
+      carBack(200, 200);              //Fonction que l’on va définir pour reculer (avec les valeurs des vitesses des moteurs)
+      Serial.println("carBack");      //Message envoyé sur le moniteur de série
+      delay(300);
+      carTurnRight(255, 255);         //Fonction que l’on va définir pour tourner à droite (avec les valeurs des vitesses des moteurs)
+      Serial.println("carTurnRight"); //Message envoyé sur le moniteur de série
+      delay(500);
+    } else {
+      carBack(255, 255);              //Fonction que l’on va définir pour reculer (avec les valeurs des vitesses des moteurs)         
+      Serial.println("carBack");      //Message envoyé sur le moniteur de série
+      delay(300);
+      carTurnLeft(255, 255);          //Fonction que l’on va définir pour tourner à gauche (avec les valeurs des vitesses des moteurs)
+      Serial.println("carTurnLeft");  //Message envoyé sur le moniteur de série
+      delay(500);
+    }
+  } else {
+    carAdvance(100, 100);             //La voiture avance si elle ne rencontre pas d’obstacles       
+    Serial.println("carAdvance");     //Message envoyé sur le moniteur de série
+    delay(300);
+  }
+}
+
+void SensorSetup() {
+  pinMode(URTRIG, OUTPUT);                    
+  digitalWrite(URTRIG, HIGH);                
+  pinMode(URPWM, INPUT);                     
+  for (int i = 0; i < 4; i++) {
+    Serial.write(EnPwmCmd[i]);
+  }
+}
+
+int MeasureDistance() {
+  digitalWrite(URTRIG, LOW);
+  digitalWrite(URTRIG, HIGH);               
+  unsigned long distance = pulseIn(URPWM, LOW);
+  if (distance == 1000) {          
+    Serial.print("Invalid");
+  } else {
+    distance = distance / 50;       
+  }
+  return distance;
+}
+
+void carStop() {                                //Code pour arrêter la voiture        
+  digitalWrite(speedPin_M2, 0);                 //Vitesse de M2 – M4 nulle
+  digitalWrite(directionPin_M1, LOW);
+  digitalWrite(speedPin_M1, 0);                 //Vitesse de M1 – M3 nulle
+  digitalWrite(directionPin_M2, LOW);
+}
+
+void carBack(int leftSpeed, int rightSpeed) {   //Code pour faire reculer la voiture   
+  analogWrite (speedPin_M2, leftSpeed);         //Utilise pour M2 – M4 la vitesse choisie dans la boucle if   
+  digitalWrite(directionPin_M1, LOW);           //Les roues correspondantes à M1 – M3 tournent en arrière
+  analogWrite (speedPin_M1, rightSpeed);        //Utilise pour M1 – M3 la vitesse choisie dans la boucle if   
+  digitalWrite(directionPin_M2, LOW);           //Les roues correspondantes à M2 – M4 tournent en arrière
+}
+
+void carAdvance(int leftSpeed, int rightSpeed) {     //Code pour faire avancer la voiture
+  analogWrite (speedPin_M2, leftSpeed);              //Utilise pour M2 – M4 la vitesse choisie dans la boucle if
+  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1 – M3 tournent en avant
+  analogWrite (speedPin_M1, rightSpeed);             //Utilise pour M1 – M3 la vitesse choisie dans la boucle if
+  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2 – M4 tournent en avant
+}
+
+void carTurnLeft(int leftSpeed, int rightSpeed) {    //Code pour tourner à gauche       
+  analogWrite (speedPin_M2, leftSpeed);
+  digitalWrite(directionPin_M1, LOW);                //Les roues correspondantes à M1 – M3 tournent en arrière
+  analogWrite (speedPin_M1, rightSpeed);
+  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2 – M4 tournent en avant
+}
+void carTurnRight(int leftSpeed, int rightSpeed) {   //Code pour tourner à droite    
+  analogWrite (speedPin_M2, leftSpeed);
+  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1 – M3 tournent en avant
+  analogWrite (speedPin_M1, rightSpeed);
+  digitalWrite(directionPin_M2, LOW);                //Les roues correspondantes à M2 – M4 tournent en arrière
+}
+
+void servoSweep() {                       //Boucle qui fait tourner le servo moteur
+  if (sweepFlag) {          
+    if (pos >= 60 && pos <= 120) {
+      pos = pos + 15;                             
+      myservo.write(pos);                        
+    }
+    if (pos > 119)  sweepFlag = false;     //Quand le servo moteur atteint 120 degrés il va tourner dans la direction opposé               
+  }
+  else {
+    if (pos >= 60 && pos <= 120) {       
+      pos = pos - 15;
+      myservo.write(pos);
+    }
+    if (pos < 61)  sweepFlag = true;      //Quand le servo moteur atteint 60 degrés il va tourner dans la direction opposé  
+  }
+}
