@@ -1,1 +1,99 @@
+int E1 = 5;     //Vitesse M1 - M3
+int E2 = 6;     //Vitesse M2 - M4
+int M1 = 4;     //Direction M1 - M3
+int M2 = 7;     //Direction M2 - M4
 
+void stop(void)   //La voiture ne bouge pas
+{
+  digitalWrite(E1, 0);    //Vitesse nulle
+  digitalWrite(M1, LOW);  
+  digitalWrite(E2, 0);    //Vitesse nulle
+  digitalWrite(M2, LOW);  
+} 
+
+void advance(char a, char b)  //La voiture avance
+{
+  analogWrite (E1, a);
+  digitalWrite(M1, HIGH); //M1 - M3 - Les roues tournent vers l'avant
+  analogWrite (E2, b);
+  digitalWrite(M2, HIGH); //M2 - M4 - Les roues tournent vers l'avant
+}
+
+void back_off (char a, char b) //La voiture recule
+{
+  analogWrite (E1, a);
+  digitalWrite(M1, LOW); //M1 - M3 - Les roues tournent vers l'arrière
+  analogWrite (E2, b);
+  digitalWrite(M2, LOW); //M2 - M4 - Les roues tournent vers l'arrière
+}
+
+
+void turn_L (char a, char b) //La voiture tourne vers la gauche
+{
+  analogWrite (E1, a);
+  digitalWrite(M1, LOW); //M1 - M3 - Les roues tournent vers l'arrière
+  analogWrite (E2, b);
+  digitalWrite(M2, HIGH); //M2 - M4 - Les roues tournent vers l'avant
+}
+
+void turn_R (char a, char b) //La voiture tourne vers la droite
+{
+  analogWrite (E1, a);
+  digitalWrite(M1, HIGH); //M1 - M3 - Les roues tournent vers l'avant
+  analogWrite (E2, b);
+  digitalWrite(M2, LOW); //M2 - M4 - Les roues tournent vers l'arrière
+}
+
+void setup(void) {
+  int i;
+  for (i = 4; i <= 7; i++)
+    pinMode(i, OUTPUT);
+  Serial.begin(9600);
+  Serial.println("Bonjour. w = Avant, d = Tourne à droite, a = Tourne à gauche, s = Arrière, x = Stop, z = Bonjour"); //Instructions sur le moniteur de série
+  digitalWrite(E1, LOW);
+  digitalWrite(E2, LOW);
+}
+
+void loop(void) {
+  if (Serial.available()) {
+    char val = Serial.read();
+    if (val != -1)
+    {
+      switch (val)
+      {
+        case 'w':
+          Serial.println("La voiture avance");
+          advance (255, 255);  //La voiture avance à la vitesse maximale (valeurs de 0 à 255)
+          delay (1000);
+          stop();
+          break;
+        case 's':
+          Serial.println("La voiture recule");
+          back_off (255, 255);  //La voiture recule à la vitesse maximale
+          delay (1000);
+          stop();
+          break;
+        case 'a':
+          Serial.println("La voiture tourne à gauche");
+          turn_L (255, 255);
+          delay (1000);
+          stop();
+          break;
+        case 'd':
+          Serial.println("La voiture tourne à droite");
+          turn_R (255, 255);
+          delay (1000);
+          stop();
+          break;
+        case 'z':
+          Serial.println("Bonjour!");
+          break;
+        case 'x':
+          Serial.println("Stop");
+          stop();
+          break;
+      }
+    }
+    else stop();
+  }
+}
