@@ -1,7 +1,7 @@
-int E1 = 5;     //Vitesse M1 - M3
-int E2 = 6;     //Vitesse M2 - M4
-int M1 = 4;     //Direction M1 - M3
-int M2 = 7;     //Direction M2 - M4
+int E1 = 5;     //Vitesse M1-M3
+int E2 = 6;     //Vitesse M2-M4
+int M1 = 4;     //Direction M1-M3
+int M2 = 7;     //Direction M2-M4
 
 void stop(void)   //La voiture ne bouge pas
 {
@@ -13,85 +13,85 @@ void stop(void)   //La voiture ne bouge pas
 
 void advance(char a, char b)  //La voiture avance
 {
-  analogWrite (E1, a);
+  analogWrite (E1, a);    //Vitesse de M1-M3 donnée par le premier paramétre (a)
   digitalWrite(M1, HIGH); //M1 - M3 - Les roues tournent vers l'avant
-  analogWrite (E2, b);
+  analogWrite (E2, b);    //Vitesse de M2-M4 donnée par le deuxième paramétre (b)
   digitalWrite(M2, HIGH); //M2 - M4 - Les roues tournent vers l'avant
 }
 
 void back_off (char a, char b) //La voiture recule
 {
-  analogWrite (E1, a);
+  analogWrite (E1, a);   //Vitesse de M1-M3 donnée par le premier paramétre (a)
   digitalWrite(M1, LOW); //M1 - M3 - Les roues tournent vers l'arrière
-  analogWrite (E2, b);
+  analogWrite (E2, b);   //Vitesse de M2-M4 donnée par le deuxième paramétre (b)
   digitalWrite(M2, LOW); //M2 - M4 - Les roues tournent vers l'arrière
 }
 
 
 void turn_L (char a, char b) //La voiture tourne vers la gauche
 {
-  analogWrite (E1, a);
+  analogWrite (E1, a);   //Vitesse de M1-M3 donnée par le premier paramétre (a)
   digitalWrite(M1, LOW); //M1 - M3 - Les roues tournent vers l'arrière
-  analogWrite (E2, b);
+  analogWrite (E2, b);   //Vitesse de M2-M4 donnée par le deuxième paramétre (b)
   digitalWrite(M2, HIGH); //M2 - M4 - Les roues tournent vers l'avant
 }
 
 void turn_R (char a, char b) //La voiture tourne vers la droite
 {
-  analogWrite (E1, a);
+  analogWrite (E1, a);    //Vitesse de M1-M3 donnée par le premier paramétre (a)
   digitalWrite(M1, HIGH); //M1 - M3 - Les roues tournent vers l'avant
-  analogWrite (E2, b);
+  analogWrite (E2, b);    //Vitesse de M2-M4 donnée par le deuxième paramétre (b)
   digitalWrite(M2, LOW); //M2 - M4 - Les roues tournent vers l'arrière
 }
 
-void setup(void) {
-  int i;
-  for (i = 4; i <= 7; i++)
+void setup(void) {    //Ce qui se passe lorsque la voiture démarre
+  int i;             
+  for (i = 4; i <= 7; i++)  //On va controler les pins de 4 à 7
     pinMode(i, OUTPUT);
-  Serial.begin(9600);
-  Serial.println("Bonjour. w = Avant, d = Tourne à droite, a = Tourne à gauche, s = Arrière, x = Stop, z = Bonjour"); //Instructions sur le moniteur de série
+  Serial.begin(9600);       //Fréquence choisie pour le moniteur de série
+  Serial.println("Bonjour. w = Avant, d = Tourne à droite, a = Tourne à gauche, s = Arrière, x = Stop, z = Bonjour!"); //Instructions sur le moniteur de série
   digitalWrite(E1, LOW);
   digitalWrite(E2, LOW);
 }
 
-void loop(void) {
+void loop(void) {                  //Instructions de controle
   if (Serial.available()) {
-    char val = Serial.read();
-    if (val != -1)
+    char val = Serial.read();      //On lit la chaine envoyée par le clavier
+    if (val != -1)                 //Ca sera le cas si on suit ls instructions
     {
-      switch (val)
+      switch (val)                 //On va comparer la chaine envoyée par le clavier avec plusieures chaines
       {
-        case 'w':
+        case 'w':                  //Si on envoie "w"
           Serial.println("La voiture avance");
-          advance (255, 255);  //La voiture avance à la vitesse maximale (valeurs de 0 à 255)
+          advance (255, 255);      //La voiture avance à la vitesse maximale (valeurs de 0 à 255)
           delay (1000);
-          stop();
-          break;
-        case 's':
+          stop();                  
+          break;                   //La boucle s'arrete et redémarre
+        case 's':                  //Si on envoie "s"
           Serial.println("La voiture recule");
-          back_off (255, 255);  //La voiture recule à la vitesse maximale
+          back_off (255, 255);     //La voiture recule à la vitesse maximale
           delay (1000);
           stop();
-          break;
-        case 'a':
+          break;                   //La boucle s'arrete et redémarre
+        case 'a':                  //Si on envoie "a"
           Serial.println("La voiture tourne à gauche");
-          turn_L (255, 255);
+          turn_L (255, 255);       //La voiture tourne à gauche à la vitesse maximale
           delay (1000);
           stop();
-          break;
-        case 'd':
+          break;                   //La boucle s'arrete et redémarre
+        case 'd':                  //Si on envoie "d"
           Serial.println("La voiture tourne à droite");
-          turn_R (255, 255);
+          turn_R (255, 255);       //La voiture tourne à droite à la vitesse maximale
           delay (1000);
           stop();
-          break;
-        case 'z':
-          Serial.println("Bonjour!");
-          break;
-        case 'x':
-          Serial.println("Stop");
-          stop();
-          break;
+          break;                   //La boucle s'arrete et redémarre
+        case 'z':                  //Si on envoie "z"
+          Serial.println("Bonjour!");  //Sur le moniteur de série on verra le message "Bonjour!"
+          break;                   //La boucle s'arrete et redémarre
+        case 'x':                  //Si on envoie "x"
+          Serial.println("Stop");  //Sur le moniteur de série on verra le message "Stop"
+          stop();                  //La voiture s'arrete
+          break;                   //La boucle s'arrete et redémarre
       }
     }
     else stop();
