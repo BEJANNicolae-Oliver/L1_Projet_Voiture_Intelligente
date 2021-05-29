@@ -1,18 +1,18 @@
-#include <Servo.h>  //Bibliothèque qui rend plus intuitive l’utilisation d’un servo moteur
-#include <Metro.h>  //Bibliothèque qui rend plus intuitive la programmation d’événements  périodiques
+#include <Servo.h>                  //Bibliothèque qui rend plus intuitive l’utilisation d’un servo moteur
+#include <Metro.h>                  //Bibliothèque qui rend plus intuitive la programmation d’événements  périodiques
 
-Metro measureDistance = Metro(50);  //On fixe 
-Metro sweepServo = Metro(20);       //On fixe 
+Metro measureDistance = Metro(50);  //On fixe une période pour la mesuration de la distance
+Metro sweepServo = Metro(20);       //On fixe une période pour faire tourner le servo moteur
 
-int speedPin_M1 = 5;         //Le pin n°5 contrôle la vitesse de M1 – M3
-int speedPin_M2 = 6;         //Le pin n°6 contrôle la vitesse de M2 – M4
-int directionPin_M1 = 4;     //Le pin n°4 contrôle la direction de M1 – M3
-int directionPin_M2 = 7;     //Le pin n°7 contrôle la direction de M2 – M4
+int speedPin_M1 = 5;                //Le pin 5 contrôle la vitesse de M1–M3
+int speedPin_M2 = 6;                //Le pin 6 contrôle la vitesse de M2–M4
+int directionPin_M1 = 4;            //Le pin 4 contrôle la direction de M1–M3
+int directionPin_M2 = 7;            //Le pin 7 contrôle la direction de M2–M4
 unsigned long actualDistance = 0;
 
-Servo myservo;  
-int pos = 60;
-int sweepFlag = 1;     
+Servo myservo;                      //On active le servo moteur
+int pos = 60;                       
+int sweepFlag = 1;                  
 
 int URPWM = 3; 
 int URTRIG = 10;
@@ -115,7 +115,7 @@ void carTurnRight(int leftSpeed, int rightSpeed) {   //Code pour tourner à droi
   digitalWrite(directionPin_M2, LOW);                //Les roues correspondantes à M2 – M4 tournent en arrière
 }
 
-void servoSweep() {                       //Boucle qui fait tourner le servo moteur
+void servoSweep() {                        //Boucle qui fait tourner le servo moteur
   if (sweepFlag) {          
     if (pos >= 60 && pos <= 120) {
       pos = pos + 15;                             
@@ -128,6 +128,6 @@ void servoSweep() {                       //Boucle qui fait tourner le servo mot
       pos = pos - 15;
       myservo.write(pos);
     }
-    if (pos < 61)  sweepFlag = true;      //Quand le servo moteur atteint 60 degrés il va tourner dans la direction opposé  
+    if (pos < 61)  sweepFlag = true;       //Quand le servo moteur atteint 60 degrés il va tourner dans la direction opposé  
   }
 }
