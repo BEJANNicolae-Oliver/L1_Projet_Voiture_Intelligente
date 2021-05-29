@@ -28,7 +28,7 @@ void setup(){
 void loop() {
   if (measureDistance.check() == 1) {
     actualDistance = MeasureDistance();
-Serial.println(actualDistance); //Envoye la valeur de la distance sur le moniteur de série
+Serial.println(actualDistance);       //Envoye la valeur de la distance sur le moniteur de série
 delay(100);
   }
 
