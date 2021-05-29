@@ -11,18 +11,18 @@ int directionPin_M2 = 7;            //Le pin 7 contrôle la direction de M2–M4
 unsigned long actualDistance = 0;
 
 Servo myservo;                      //On active le servo moteur
-int pos = 60;                       //Position initiale
-int sweepFlag = 1;                  //La valeur des commandes qui vont suivre va corréspondre à 1 degré
+int pos = 60;                       //Position du servo
+int sweepFlag = 1;                  
 
-int URPWM = 3; 
+int URPWM = 3;                      //Réception des données du capteur à ultrasons
 int URTRIG = 10;
-uint8_t EnPwmCmd[4] = {0x44, 0x02, 0xbb, 0x01}; 
+uint8_t EnPwmCmd[4] = {0x44, 0x02, 0xbb, 0x01}; //Mésuration de la distance
 
-void setup(){                                 
-  myservo.attach(9);
-  Serial.begin(9600);                        
-  SensorSetup();
-  delay(1000);
+void setup(){                                
+  myservo.attach(9);                
+  Serial.begin(9600);               //Fréquence pour le moniteur de série en baud        
+  SensorSetup();                    
+  delay(1000);                      
 }
 
 void loop() {
@@ -61,7 +61,7 @@ delay(100);
 }
 
 void SensorSetup() {
-  pinMode(URTRIG, OUTPUT);                    
+  pinMode(URTRIG, OUTPUT);                           
   digitalWrite(URTRIG, HIGH);                
   pinMode(URPWM, INPUT);                     
   for (int i = 0; i < 4; i++) {
