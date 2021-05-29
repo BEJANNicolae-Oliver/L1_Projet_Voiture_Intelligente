@@ -11,8 +11,8 @@ int directionPin_M2 = 7;            //Le pin 7 contrôle la direction de M2–M4
 unsigned long actualDistance = 0;
 
 Servo myservo;                      //On active le servo moteur
-int pos = 60;                       
-int sweepFlag = 1;                  
+int pos = 60;                       //Position initiale
+int sweepFlag = 1;                  //La valeur des commandes qui vont suivre va corréspondre à 1 degré
 
 int URPWM = 3; 
 int URTRIG = 10;
