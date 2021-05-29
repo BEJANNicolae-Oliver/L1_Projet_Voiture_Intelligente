@@ -82,37 +82,37 @@ int MeasureDistance() {
 }
 
 void carStop() {                                //Code pour arrêter la voiture        
-  digitalWrite(speedPin_M2, 0);                 //Vitesse de M2 – M4 nulle
+  digitalWrite(speedPin_M2, 0);                 //Vitesse de M2–M4 nulle
   digitalWrite(directionPin_M1, LOW);
-  digitalWrite(speedPin_M1, 0);                 //Vitesse de M1 – M3 nulle
+  digitalWrite(speedPin_M1, 0);                 //Vitesse de M1–M3 nulle
   digitalWrite(directionPin_M2, LOW);
 }
 
 void carBack(int leftSpeed, int rightSpeed) {   //Code pour faire reculer la voiture   
-  analogWrite (speedPin_M2, leftSpeed);         //Utilise pour M2 – M4 la vitesse choisie dans la boucle if   
-  digitalWrite(directionPin_M1, LOW);           //Les roues correspondantes à M1 – M3 tournent en arrière
-  analogWrite (speedPin_M1, rightSpeed);        //Utilise pour M1 – M3 la vitesse choisie dans la boucle if   
-  digitalWrite(directionPin_M2, LOW);           //Les roues correspondantes à M2 – M4 tournent en arrière
+  analogWrite (speedPin_M2, leftSpeed);         //Utilise pour M2–M4 la vitesse choisie dans la boucle if (paramétre leftspeed)   
+  digitalWrite(directionPin_M1, LOW);           //Les roues correspondantes à M1–M3 tournent en arrière
+  analogWrite (speedPin_M1, rightSpeed);        //Utilise pour M1–M3 la vitesse choisie dans la boucle if (paramétre rightspeed)   
+  digitalWrite(directionPin_M2, LOW);           //Les roues correspondantes à M2–M4 tournent en arrière
 }
 
 void carAdvance(int leftSpeed, int rightSpeed) {     //Code pour faire avancer la voiture
-  analogWrite (speedPin_M2, leftSpeed);              //Utilise pour M2 – M4 la vitesse choisie dans la boucle if
-  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1 – M3 tournent en avant
-  analogWrite (speedPin_M1, rightSpeed);             //Utilise pour M1 – M3 la vitesse choisie dans la boucle if
-  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2 – M4 tournent en avant
+  analogWrite (speedPin_M2, leftSpeed);              //Utilise pour M2–M4 la vitesse choisie dans la boucle if (paramétre leftspeed)
+  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1–M3 tournent en avant
+  analogWrite (speedPin_M1, rightSpeed);             //Utilise pour M1–M3 la vitesse choisie dans la boucle if (paramétre rightspeed)
+  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2–M4 tournent en avant
 }
 
 void carTurnLeft(int leftSpeed, int rightSpeed) {    //Code pour tourner à gauche       
-  analogWrite (speedPin_M2, leftSpeed);
-  digitalWrite(directionPin_M1, LOW);                //Les roues correspondantes à M1 – M3 tournent en arrière
-  analogWrite (speedPin_M1, rightSpeed);
-  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2 – M4 tournent en avant
+  analogWrite (speedPin_M2, leftSpeed);              //Utilise pour M2–M4 la vitesse choisie dans la boucle if (paramétre leftspeed)
+  digitalWrite(directionPin_M1, LOW);                //Les roues correspondantes à M1–M3 tournent en arrière
+  analogWrite (speedPin_M1, rightSpeed);             //Utilise pour M1–M3 la vitesse choisie dans la boucle if (paramétre rightspeed)
+  digitalWrite(directionPin_M2, HIGH);               //Les roues correspondantes à M2–M4 tournent en avant
 }
 void carTurnRight(int leftSpeed, int rightSpeed) {   //Code pour tourner à droite    
-  analogWrite (speedPin_M2, leftSpeed);
-  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1 – M3 tournent en avant
-  analogWrite (speedPin_M1, rightSpeed);
-  digitalWrite(directionPin_M2, LOW);                //Les roues correspondantes à M2 – M4 tournent en arrière
+  analogWrite (speedPin_M2, leftSpeed);              //Utilise pour M2–M4 la vitesse choisie dans la boucle if (paramétre leftspeed)
+  digitalWrite(directionPin_M1, HIGH);               //Les roues correspondantes à M1–M3 tournent en avant
+  analogWrite (speedPin_M1, rightSpeed);             //Utilise pour M1–M3 la vitesse choisie dans la boucle if (paramétre rightspeed)
+  digitalWrite(directionPin_M2, LOW);                //Les roues correspondantes à M2–M4 tournent en arrière
 }
 
 void servoSweep() {                        //Boucle qui fait tourner le servo moteur
