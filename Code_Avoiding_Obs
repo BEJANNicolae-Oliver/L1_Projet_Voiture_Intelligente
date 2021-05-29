@@ -116,7 +116,7 @@ void carTurnRight(int leftSpeed, int rightSpeed) {   //Code pour tourner à droi
 }
 
 void servoSweep() {                        //Boucle qui fait tourner le servo moteur
-  if (sweepFlag) {                         //"sweepFlag"est une variable qui permet de savoir de quel coté tourne le Servo (deux valeurs possibles: "true" et "false")
+  if (sweepFlag) {                         //"sweepFlag"est une variable qui permet de savoir de quel coté tourne le servo (deux valeurs possibles: "true" et "false")
     if (pos >= 60 && pos <= 120) {         
       pos = pos + 15;                      //Le servo tourne au pas de 15 degrés       
       myservo.write(pos);                        
